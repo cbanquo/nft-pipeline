@@ -3,19 +3,15 @@ from abc import ABC, abstractmethod
 
 class AbstractExtractLoad(ABC):
 
-    def run(self) -> None:
-        """Run extract and load pipeline
-        """
-        response = self._make_request()
-        f_response = self._format_response(response)
-        self._load_data(f_response)
+    @abstractmethod
+    def _get_data(self):
+        pass
 
-    def _make_request(self):
+    @staticmethod
+    @abstractmethod
+    def _format_data(response):
         pass
 
     @abstractmethod
-    def _format_response(response):
-        pass
-
-    def _load_data(self, data):
+    def _post_data(self, data):
         pass
