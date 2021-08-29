@@ -1,4 +1,4 @@
-from typing import Dict
+from typing import Dict, List
 import requests
 import logging
 
@@ -29,7 +29,19 @@ JSON_QUERY = """
 
 class OpenseaExtractLoad(AbstractExtractLoad):
 
-    def _get_data(self, n_return: int = 1000, offset_id: str = "") -> Dict:
+    def _get_data(self, n_return: int = 1000, offset_id: str = "") -> List[Dict]:
+        """Get data for open sea sales 
+
+        Args:
+            n_return (int, optional): Number of sales to return. Defaults to 1000.
+            offset_id (str, optional): Id of last sale you want to offset from (get next sale after said id). Defaults to "".
+
+        Raises:
+            Exception: Raised if fails to return status_code == 200
+
+        Returns:
+            List[Dict]: List of sales, each sale formatted as a dict (json)
+        """
         query_str = JSON_QUERY.format(n_return, offset_id)
         logging.debug(f"JSON query: {query_str}")
 
