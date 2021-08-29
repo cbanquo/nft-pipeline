@@ -1,5 +1,6 @@
 from typing import Dict, List
 import requests
+from itertools import chain
 import logging
 
 from src.abstract_extract_load import AbstractExtractLoad
@@ -54,8 +55,17 @@ class OpenseaExtractLoad(AbstractExtractLoad):
 
         return response.json()['data']['openSeaSales']
 
-    def _format_data(self):
-        pass
+    @staticmethod
+    def _format_data(data: List[List[Dict]]) -> List[Dict]:
+        """Format data such that it can be easily loaded into snowflake
+
+        Args:
+            data (List[List[Dict]]): List of list of opensea sales 
+
+        Returns:
+            List[Dict]: Flattened list
+        """
+        return list(chain.from_iterable(data))
 
     def _post_data(self): 
         pass
