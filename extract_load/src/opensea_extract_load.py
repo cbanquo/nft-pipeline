@@ -35,7 +35,8 @@ JSON_QUERY = """
 
 class OpenseaExtractLoad(AbstractExtractLoad):
 
-    def _get_data(self, n_return: int = 1000, offset_id: str = "") -> List[Dict]:
+    @staticmethod
+    def _get_data(n_return: int = 1000, offset_id: str = "") -> List[Dict]:
         """Get data for open sea sales 
 
         Args:
@@ -76,7 +77,8 @@ class OpenseaExtractLoad(AbstractExtractLoad):
             data = list(chain.from_iterable(data))
         return [json.dumps(obj) for obj in data]
 
-    def _insert_data(self, data: List[str]): 
+    @staticmethod
+    def _insert_data(data: List[str]): 
         ctx = get_snowflake_connection()
         cs = ctx.cursor()
         try:
