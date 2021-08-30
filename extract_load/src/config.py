@@ -10,5 +10,6 @@ config = {
     "user": os.environ['snow_user'],
     "password": os.environ['snow_password'],
     "database": os.environ['snow_database'], 
-    "schema": os.environ['snow_schema']
+    "schema": os.environ['snow_schema'], 
+    "table": os.environ['snow_table']
 }
