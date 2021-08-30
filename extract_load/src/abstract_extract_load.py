@@ -10,7 +10,7 @@ class AbstractExtractLoad(ABC):
 
     @staticmethod
     @abstractmethod
-    def _format_data(response):
+    def _format_data(data):
         pass
 
     @staticmethod
