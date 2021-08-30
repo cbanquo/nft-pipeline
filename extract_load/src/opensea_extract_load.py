@@ -2,8 +2,12 @@ from typing import Dict, List
 import requests
 from itertools import chain
 import logging
+import json
 
 from src.abstract_extract_load import AbstractExtractLoad
+from src.db_connection import get_snowflake_connection
+from src.config import config
+
 
 URL = "https://api.thegraph.com/subgraphs/name/artblocks/art-blocks"
 JSON_QUERY = """
@@ -28,6 +32,7 @@ JSON_QUERY = """
     }}
 """
 
+
 class OpenseaExtractLoad(AbstractExtractLoad):
 
     def _get_data(self, n_return: int = 1000, offset_id: str = "") -> List[Dict]:
@@ -35,7 +40,8 @@ class OpenseaExtractLoad(AbstractExtractLoad):
 
         Args:
             n_return (int, optional): Number of sales to return. Defaults to 1000.
-            offset_id (str, optional): Id of last sale you want to offset from (get next sale after said id). Defaults to "".
+            offset_id (str, optional): Id of last sale you want to offset from (get next sale after said id). 
+                                       Defaults to "".
 
         Raises:
             Exception: Raised if fails to return status_code == 200
@@ -56,16 +62,38 @@ class OpenseaExtractLoad(AbstractExtractLoad):
         return response.json()['data']['openSeaSales']
 
     @staticmethod
-    def _format_data(data: List[List[Dict]]) -> List[Dict]:
+    def _format_data(data: List[List[Dict]]) -> List[str]:
         """Format data such that it can be easily loaded into snowflake
 
         Args:
             data (List[List[Dict]]): List of list of opensea sales 
 
         Returns:
-            List[Dict]: Flattened list
+            List[str]: Flat list of JSON data
         """
-        return list(chain.from_iterable(data))
+        # flatten if list of lists
+        if isinstance(data[0], list):
+            data = list(chain.from_iterable(data))
+        return [json.dumps(obj) for obj in data]
 
-    def _post_data(self): 
-        pass
+    def _post_data(self, data: List[str]): 
+        ctx = get_snowflake_connection()
+        cs = ctx.cursor()
+        try:
+            # ensure table created
+            cs.execute(
+                f"""
+                CREATE TABLE IF NOT EXISTS 
+                    {config['table']} (data VARIANT)
+                """
+            )
+            # insert data
+            cs.executemany(
+                f"""
+                INSERT INTO {config['table']} (data) 
+                    SELECT PARSE_JSON($1) FROM VALUES (%s)
+                """, data
+            )
+        finally:
+            cs.close()
+        ctx.close()
