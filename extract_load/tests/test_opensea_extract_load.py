@@ -42,11 +42,11 @@ class TestOpenseaExtractLoad:
         assert json.loads(f_data[-1]) ==  s_response[-1]
 
 
-    def test_post_data(self, cursor, instance, api_response):
+    def test_insert_data(self, cursor, instance, api_response):
         # formatted data
         f_data = instance._format_data(api_response)
 
-        instance._post_data(f_data)
+        instance._insert_data(f_data)
 
         db_data = [col[0] for col in cursor.execute(f"SELECT * FROM {config['table']}")]
 

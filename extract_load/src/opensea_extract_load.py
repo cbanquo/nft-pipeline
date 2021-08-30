@@ -76,7 +76,7 @@ class OpenseaExtractLoad(AbstractExtractLoad):
             data = list(chain.from_iterable(data))
         return [json.dumps(obj) for obj in data]
 
-    def _post_data(self, data: List[str]): 
+    def _insert_data(self, data: List[str]): 
         ctx = get_snowflake_connection()
         cs = ctx.cursor()
         try:

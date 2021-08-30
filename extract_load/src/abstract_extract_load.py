@@ -13,5 +13,5 @@ class AbstractExtractLoad(ABC):
         pass
 
     @abstractmethod
-    def _post_data(self, data):
+    def _insert_data(self, data):
         pass
