@@ -5,7 +5,7 @@ class AbstractExtractLoad(ABC):
 
     @staticmethod
     @abstractmethod
-    def _get_data(self):
+    def _get_data():
         pass
 
     @staticmethod
@@ -15,5 +15,5 @@ class AbstractExtractLoad(ABC):
 
     @staticmethod
     @abstractmethod
-    def _insert_data(self, data):
+    def _insert_data(data):
         pass
