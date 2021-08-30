@@ -5,7 +5,9 @@ from src.config import config
 
 
 @pytest.fixture(scope="session")
-def setup_db():
+def cursor():
+    """Creates a test table and returns a cursor to interact with db
+    """
     ctx = get_snowflake_connection()
     cs = ctx.cursor()
     try: 
@@ -15,7 +17,7 @@ def setup_db():
                 {config['table']} (data VARIANT)
             """
         )
-        yield
+        yield cs
     finally:
         cs.close()
     ctx.close()
