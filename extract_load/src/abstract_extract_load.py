@@ -5,6 +5,11 @@ class AbstractExtractLoad(ABC):
 
     @staticmethod
     @abstractmethod
+    def run():
+        pass
+
+    @staticmethod
+    @abstractmethod
     def _get_data():
         pass
 
