@@ -12,7 +12,7 @@ from src.config import config
 URL = "https://api.thegraph.com/subgraphs/name/artblocks/art-blocks"
 JSON_QUERY = """
     {{
-        openSeaSales(first: {}, where:{{id_gt: "{}"}}) {{
+        openSeaSales(first: {}, orderBy: id, orderDirection: asc, where:{{id_gt: "{}"}}) {{
             id
             saleType
             blockNumber
@@ -34,6 +34,22 @@ JSON_QUERY = """
 
 
 class OpenseaExtractLoad(AbstractExtractLoad):
+
+    @staticmethod
+    def run() -> None:
+        """Run extract and load pipeline
+        """
+        while True:
+            last_id = OpenseaExtractLoad._get_last_id()
+            print(last_id)
+
+            data = OpenseaExtractLoad._get_data(n_return=1000, offset_id=last_id)
+
+            f_data = OpenseaExtractLoad._format_data(data)
+            OpenseaExtractLoad._insert_data(f_data)
+
+            if len(data) != 1000:
+                break
 
     @staticmethod
     def _get_data(n_return: int = 1000, offset_id: str = "") -> List[Dict]:
@@ -73,29 +89,66 @@ class OpenseaExtractLoad(AbstractExtractLoad):
             List[str]: Flat list of JSON data
         """
         # flatten if list of lists
-        if isinstance(data[0], list):
+        if data and isinstance(data[0], list):
             data = list(chain.from_iterable(data))
         return [json.dumps(obj) for obj in data]
 
     @staticmethod
-    def _insert_data(data: List[str]): 
+    def _insert_data(data: List[str]) -> None: 
+        """Insert data into snowflake
+
+        Args:
+            data (List[str]): Data to be inserted
+        """
+        if data:
+            ctx = get_snowflake_connection()
+            cs = ctx.cursor()
+            try:
+                # ensure table created
+                cs.execute(
+                    f"""
+                    CREATE TABLE IF NOT EXISTS 
+                        {config['table']} (data VARIANT)
+                    """
+                )
+                # insert data
+                cs.executemany(
+                    f"""
+                    INSERT INTO {config['table']} (data) 
+                        SELECT PARSE_JSON($1) FROM VALUES (%s)
+                    """, data
+                )
+            finally:
+                cs.close()
+                
+            ctx.close()
+
+    @staticmethod
+    def _get_last_id() -> str:
+        """Get last id ingested by pipeline (last determined by largest blockNumber)
+        """
+        id = ""
+
         ctx = get_snowflake_connection()
         cs = ctx.cursor()
         try:
-            # ensure table created
-            cs.execute(
+            # get id with largest block number
+            val = cs.execute(
                 f"""
-                CREATE TABLE IF NOT EXISTS 
-                    {config['table']} (data VARIANT)
+                SELECT 
+                    FIRST_VALUE(data:id) OVER(ORDER BY data:id::TEXT DESC)::TEXT AS id
+                FROM 
+                    {config['table']} 
+                LIMIT 
+                    1
                 """
             )
-            # insert data
-            cs.executemany(
-                f"""
-                INSERT INTO {config['table']} (data) 
-                    SELECT PARSE_JSON($1) FROM VALUES (%s)
-                """, data
-            )
+            id = list(val)[0][0]
+        except:
+            pass
         finally:
             cs.close()
+
         ctx.close()
+
+        return id

@@ -53,3 +53,23 @@ class TestOpenseaExtractLoad:
         assert len(f_data) == len(db_data)
         assert json.loads(f_data[0]) == json.loads(db_data[0])
         assert json.loads(f_data[-1]) == json.loads(db_data[-1])
+
+    def test_get_last_id(self, cursor, instance, api_response):
+        # clear tables
+        cursor.execute(f"TRUNCATE TABLE {config['table']}")
+        max_id = ""
+
+        id = instance._get_last_id()
+        assert id == max_id # should be no max id
+
+        for json in api_response:
+            if json['id'] > max_id:
+                max_id = json['id'] 
+
+        # re-ingest data
+        f_data = instance._format_data(api_response)
+        instance._insert_data(f_data)
+
+        # ensure id as expected
+        id = instance._get_last_id()
+        assert id == max_id
