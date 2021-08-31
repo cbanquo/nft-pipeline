@@ -1,0 +1,25 @@
+default:
+  outputs:
+
+    dev:
+      type: snowflake
+      threads: 8
+      account: bu19631.eu-west-2.aws
+      user: dbt_user
+      password: test123
+      database: analytics
+      schema: dbt_banquo
+      client_keep_session_alive: False
+
+    prod:
+      type: redshift
+      method: iam
+      cluster_id: [cluster_id]
+      threads: [1 or more]
+      host: [host]
+      port: [port]
+      user: [prod_user]
+      dbname: [dbname]
+      schema: [prod_schema]
+
+  target: dev

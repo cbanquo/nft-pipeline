@@ -1,0 +1,9 @@
+version: 2
+
+sources: 
+
+  - name: raw_python
+    database: raw
+    schema: python
+    tables: 
+      - name: opensea_transactions
