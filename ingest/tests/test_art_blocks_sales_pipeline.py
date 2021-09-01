@@ -10,6 +10,7 @@ class TestArtBlocksSalesPipeline:
 
     @pytest.fixture(scope='class')
     def class_cursor(self, cursor):
+        # create test table
         cursor.execute(
             f"""
             CREATE OR REPLACE TRANSIENT TABLE
@@ -31,14 +32,14 @@ class TestArtBlocksSalesPipeline:
         assert isinstance(api_response, list)
         assert isinstance(api_response[0], dict)
 
-        offset_id = api_response[-1]['id']
-        offset_response = instance._get_data(1, offset_id)
+        offset_block_timestamp = int(api_response[-1]['blockTimestamp'])
+        offset_response = instance._get_data(1, offset_block_timestamp)
         assert len(offset_response) == 1
-        assert offset_id != offset_response[-1]['id']
+        assert offset_block_timestamp != offset_response[-1]['blockTimestamp']
 
     def test_format_data(self, instance, api_response): 
         # first and second responses
-        s_response = instance._get_data(1, api_response[-1]['id'])
+        s_response = instance._get_data(1, int(api_response[-1]['blockTimestamp']))
 
         data = [api_response, s_response]
 
@@ -67,19 +68,21 @@ class TestArtBlocksSalesPipeline:
     def test_get_last_id(self, class_cursor, instance, api_response):
         # clear tables
         class_cursor.execute(f"TRUNCATE TABLE {TABLE_NAME}")
-        max_id = ""
+        max_block_timestamp = 0
 
-        id = instance._get_last_id()
-        assert id == max_id # should be no max id
+        block_timestamp = instance._get_last_block_timestamp()
+        assert block_timestamp == max_block_timestamp # should be no max id
 
         for json in api_response:
-            if json['id'] > max_id:
-                max_id = json['id'] 
+            block_timestamp = int(json['blockTimestamp'])
+
+            if block_timestamp > max_block_timestamp:
+                max_block_timestamp = block_timestamp 
 
         # re-ingest data
         f_data = instance._format_data(api_response)
         instance._insert_data(f_data)
 
         # ensure id as expected
-        id = instance._get_last_id()
-        assert id == max_id
+        block_timestamp = instance._get_last_block_timestamp()
+        assert block_timestamp == max_block_timestamp

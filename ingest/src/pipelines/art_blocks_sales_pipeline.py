@@ -11,10 +11,11 @@ TABLE_NAME="art_blocks_sales"
 URL = "https://api.thegraph.com/subgraphs/name/artblocks/art-blocks"
 JSON_QUERY = """
     {{
-        openSeaSales(first: {}, orderBy: id, orderDirection: asc, where:{{id_gt: "{}"}}) {{
+        openSeaSales(first: {}, orderBy: blockTimestamp, orderDirection: asc, where:{{blockTimestamp_gt: {}}}) {{
             id
             saleType
             blockNumber
+            blockTimestamp
             seller
             buyer
             paymentToken
@@ -24,6 +25,8 @@ JSON_QUERY = """
                     tokenId
                     project {{
                         projectId
+                        name
+                        artistName
                     }}
                 }}
             }}
@@ -42,11 +45,11 @@ class ArtBlocksSalesPipeline(AbstractJSONPipeline):
         """
         n = 0
         while True:
-            last_id = self._get_last_id()
+            last_block_timestamp = self._get_last_block_timestamp()
             
-            logging.info(f"Last id: {last_id}")
+            logging.info(f"Last id: {last_block_timestamp}")
 
-            data = self._get_data(n_return=1000, offset_id=last_id)
+            data = self._get_data(n_return=1000, offset_block_timestamp=last_block_timestamp)
 
             f_data = self._format_data(data)
             self._insert_data(f_data)
@@ -58,7 +61,7 @@ class ArtBlocksSalesPipeline(AbstractJSONPipeline):
                 break
 
     @staticmethod
-    def _get_data(n_return: int = 1000, offset_id: str = "") -> List[Dict]:
+    def _get_data(n_return: int = 1000, offset_block_timestamp: int = 0) -> List[Dict]:
         """Get data for open sea sales 
 
         Args:
@@ -72,7 +75,7 @@ class ArtBlocksSalesPipeline(AbstractJSONPipeline):
         Returns:
             List[Dict]: List of sales, each sale formatted as a dict (json)
         """
-        query_str = JSON_QUERY.format(n_return, offset_id)
+        query_str = JSON_QUERY.format(n_return, offset_block_timestamp)
         logging.debug(f"JSON query: {query_str}")
 
         response = requests.post(URL, json={'query': query_str})
@@ -99,29 +102,28 @@ class ArtBlocksSalesPipeline(AbstractJSONPipeline):
             data = list(chain.from_iterable(data))
         return [json.dumps(obj) for obj in data]
 
-    def _get_last_id(self) -> str:
-        """Get last id ingested by pipeline (last determined by largest blockNumber)
+    def _get_last_block_timestamp(self) -> str:
+        """Get last block_timestamp ingested by pipeline (last determined by largest blockTimestamp)
         """
-        # return empty string if table empty
-        id = ""
+        block_timestamp = 0
 
         cs = self.ctx.cursor()
         try:
-            # get id with largest block number
+            # get largest block number
             val = cs.execute(
                 f"""
                 SELECT 
-                    FIRST_VALUE(data:id) OVER(ORDER BY data:id::TEXT DESC)::TEXT AS id
+                    MAX(data:blockTimestamp)::INT
                 FROM 
                     {self.table_name} 
                 LIMIT 
                     1
                 """
             )
-            id = list(val)[0][0]
+            block_timestamp = int(list(val)[0][0])
         except:
             pass
         finally:
             cs.close()
 
-        return id
+        return block_timestamp
