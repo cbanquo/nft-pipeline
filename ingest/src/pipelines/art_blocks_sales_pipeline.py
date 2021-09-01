@@ -4,7 +4,7 @@ from itertools import chain
 import logging
 import json
 
-from src.abstract_extract_load import AbstractExtractLoad
+from src.pipelines.abstract_pipeline import AbstractPipeline
 from src.db_connection import get_snowflake_connection
 from src.config import config
 
@@ -33,7 +33,7 @@ JSON_QUERY = """
 """
 
 
-class OpenseaExtractLoad(AbstractExtractLoad):
+class ArtBlocksSalesPipeline(AbstractPipeline):
 
     @staticmethod
     def run() -> None:
@@ -41,13 +41,13 @@ class OpenseaExtractLoad(AbstractExtractLoad):
         """
         n = 0
         while True:
-            last_id = OpenseaExtractLoad._get_last_id()
+            last_id = ArtBlocksSalesPipeline._get_last_id()
             print(last_id)
 
-            data = OpenseaExtractLoad._get_data(n_return=1000, offset_id=last_id)
+            data = ArtBlocksSalesPipeline._get_data(n_return=1000, offset_id=last_id)
 
-            f_data = OpenseaExtractLoad._format_data(data)
-            OpenseaExtractLoad._insert_data(f_data)
+            f_data = ArtBlocksSalesPipeline._format_data(data)
+            ArtBlocksSalesPipeline._insert_data(f_data)
 
             n += len(data)
             print(f"Ingested: {n}")

@@ -2,15 +2,15 @@ from typing import List, Dict
 import pytest
 import json
 
-from src.opensea_extract_load import OpenseaExtractLoad
+from src.pipelines.art_blocks_sales_pipeline import ArtBlocksSalesPipeline
 from src.config import config
 
 
-class TestOpenseaExtractLoad:
+class TestArtBlocksSalesPipeline:
 
     @pytest.fixture(scope="class")
-    def instance(self) -> OpenseaExtractLoad:
-        return OpenseaExtractLoad()
+    def instance(self) -> ArtBlocksSalesPipeline:
+        return ArtBlocksSalesPipeline()
 
     @pytest.fixture(scope='class')
     def api_response(self, instance) -> List[Dict]:

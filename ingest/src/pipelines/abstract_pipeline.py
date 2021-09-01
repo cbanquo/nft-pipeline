@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
 
-class AbstractExtractLoad(ABC):
+class AbstractPipeline(ABC):
 
     @staticmethod
     @abstractmethod
