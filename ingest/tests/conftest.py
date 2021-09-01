@@ -6,21 +6,14 @@ from src.config import config
 
 @pytest.fixture(scope="session")
 def cursor():
-    """Creates a test table and returns a cursor to interact with db
+    """Creates a test schema and returns a cursor to interact with db
     """
     ctx = get_snowflake_connection()
-    print(ctx.database)
     cs = ctx.cursor()
     try:
         cs.execute(
             f"""
             CREATE SCHEMA IF NOT EXISTS {config['schema']}
-            """
-        ) 
-        cs.execute(
-            f"""
-            CREATE OR REPLACE TRANSIENT TABLE
-                {config['table']} (data VARIANT)
             """
         )
         yield cs

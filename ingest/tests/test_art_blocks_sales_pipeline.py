@@ -2,11 +2,21 @@ from typing import List, Dict
 import pytest
 import json
 
-from src.pipelines.art_blocks_sales_pipeline import ArtBlocksSalesPipeline
+from src.pipelines.art_blocks_sales_pipeline import ArtBlocksSalesPipeline, TABLE_NAME
 from src.config import config
 
 
 class TestArtBlocksSalesPipeline:
+
+    @pytest.fixture(scope='class')
+    def class_cursor(self, cursor):
+        cursor.execute(
+            f"""
+            CREATE OR REPLACE TRANSIENT TABLE
+                {TABLE_NAME} (data VARIANT)
+            """
+        )
+        return cursor
 
     @pytest.fixture(scope="class")
     def instance(self) -> ArtBlocksSalesPipeline:
@@ -42,21 +52,21 @@ class TestArtBlocksSalesPipeline:
         assert json.loads(f_data[-1]) ==  s_response[-1]
 
 
-    def test_insert_data(self, cursor, instance, api_response):
+    def test_insert_data(self, class_cursor, instance, api_response):
         # formatted data
         f_data = instance._format_data(api_response)
 
         instance._insert_data(f_data)
 
-        db_data = [col[0] for col in cursor.execute(f"SELECT * FROM {config['table']}")]
+        db_data = [col[0] for col in class_cursor.execute(f"SELECT * FROM {TABLE_NAME}")]
 
         assert len(f_data) == len(db_data)
         assert json.loads(f_data[0]) == json.loads(db_data[0])
         assert json.loads(f_data[-1]) == json.loads(db_data[-1])
 
-    def test_get_last_id(self, cursor, instance, api_response):
+    def test_get_last_id(self, class_cursor, instance, api_response):
         # clear tables
-        cursor.execute(f"TRUNCATE TABLE {config['table']}")
+        class_cursor.execute(f"TRUNCATE TABLE {TABLE_NAME}")
         max_id = ""
 
         id = instance._get_last_id()

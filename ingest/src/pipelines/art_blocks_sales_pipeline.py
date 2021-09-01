@@ -4,11 +4,10 @@ from itertools import chain
 import logging
 import json
 
-from src.pipelines.abstract_pipeline import AbstractPipeline
-from src.db_connection import get_snowflake_connection
-from src.config import config
+from src.pipelines.abstract_json_pipeline import AbstractJSONPipeline
 
 
+TABLE_NAME="art_blocks_sales"
 URL = "https://api.thegraph.com/subgraphs/name/artblocks/art-blocks"
 JSON_QUERY = """
     {{
@@ -33,24 +32,28 @@ JSON_QUERY = """
 """
 
 
-class ArtBlocksSalesPipeline(AbstractPipeline):
+class ArtBlocksSalesPipeline(AbstractJSONPipeline):
 
-    @staticmethod
-    def run() -> None:
+    def __init__(self) -> None:
+        super().__init__(TABLE_NAME)
+
+    def run(self) -> None:
         """Run extract and load pipeline
         """
         n = 0
         while True:
-            last_id = ArtBlocksSalesPipeline._get_last_id()
-            print(last_id)
+            last_id = self._get_last_id()
+            
+            logging.info(f"Last id: {last_id}")
 
-            data = ArtBlocksSalesPipeline._get_data(n_return=1000, offset_id=last_id)
+            data = self._get_data(n_return=1000, offset_id=last_id)
 
-            f_data = ArtBlocksSalesPipeline._format_data(data)
-            ArtBlocksSalesPipeline._insert_data(f_data)
+            f_data = self._format_data(data)
+            self._insert_data(f_data)
 
             n += len(data)
-            print(f"Ingested: {n}")
+            logging.info(f"Ingested: {n}")
+
             if len(data) != 1000:
                 break
 
@@ -96,49 +99,13 @@ class ArtBlocksSalesPipeline(AbstractPipeline):
             data = list(chain.from_iterable(data))
         return [json.dumps(obj) for obj in data]
 
-    @staticmethod
-    def _insert_data(data: List[str]) -> None: 
-        """Insert data into snowflake
-
-        Args:
-            data (List[str]): Data to be inserted
-        """
-        if data:
-            ctx = get_snowflake_connection()
-            cs = ctx.cursor()
-            try:
-                # ensure table created
-                cs.execute(
-                    f"""
-                    CREATE SCHEMA IF NOT EXISTS {config['schema']}
-                    """
-                )
-                cs.execute(
-                    f"""
-                    CREATE TABLE IF NOT EXISTS 
-                        {config['table']} (data VARIANT)
-                    """
-                )
-                # insert data
-                cs.executemany(
-                    f"""
-                    INSERT INTO {config['table']} (data) 
-                        SELECT PARSE_JSON($1) FROM VALUES (%s)
-                    """, data
-                )
-            finally:
-                cs.close()
-                
-            ctx.close()
-
-    @staticmethod
-    def _get_last_id() -> str:
+    def _get_last_id(self) -> str:
         """Get last id ingested by pipeline (last determined by largest blockNumber)
         """
+        # return empty string if table empty
         id = ""
 
-        ctx = get_snowflake_connection()
-        cs = ctx.cursor()
+        cs = self.ctx.cursor()
         try:
             # get id with largest block number
             val = cs.execute(
@@ -146,7 +113,7 @@ class ArtBlocksSalesPipeline(AbstractPipeline):
                 SELECT 
                     FIRST_VALUE(data:id) OVER(ORDER BY data:id::TEXT DESC)::TEXT AS id
                 FROM 
-                    {config['table']} 
+                    {self.table_name} 
                 LIMIT 
                     1
                 """
@@ -156,7 +123,5 @@ class ArtBlocksSalesPipeline(AbstractPipeline):
             pass
         finally:
             cs.close()
-
-        ctx.close()
 
         return id
