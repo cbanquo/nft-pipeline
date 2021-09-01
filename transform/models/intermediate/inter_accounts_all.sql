@@ -13,7 +13,7 @@ WITH transactions AS (
         buyer_account_id, 
         seller_account_id
     FROM 
-        {{ ref('stg_opensea_transactions') }}
+        {{ ref('stg_art_blocks_sales') }}
 
 ),
 

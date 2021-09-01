@@ -11,7 +11,7 @@ WITH transactions AS (
     SELECT 
         * 
     FROM 
-        {{ ref('stg_opensea_transactions') }}
+        {{ ref('stg_art_blocks_sales') }}
 
 ), 
 
