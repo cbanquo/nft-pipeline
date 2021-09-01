@@ -6,4 +6,4 @@ sources:
     database: raw
     schema: python
     tables: 
-      - name: opensea_transactions
+      - name: art_blocks_sales

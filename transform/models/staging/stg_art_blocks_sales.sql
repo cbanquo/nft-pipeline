@@ -7,7 +7,7 @@ WITH opensea_transactions AS (
     SELECT 
         *
     FROM 
-        {{ source('raw_python', 'opensea_transactions')}}
+        {{ source('raw_python', 'art_blocks_sales')}}
 
 ),
 
@@ -31,8 +31,15 @@ flattened AS (
 
         data:paymentToken::TEXT AS payment_token_id,
 
+        -- Timestamps
+        TO_TIMESTAMP(data:blockTimestamp) AS block_at, 
+        
         -- Details
         data:blockNumber::INT AS block_number, 
+
+        value:token:project:name::TEXT AS project_name,
+        value:token:project:artistName::TEXT AS artist_name,
+
         data:saleType::TEXT AS sale_type,
         data:price::INT AS price
         

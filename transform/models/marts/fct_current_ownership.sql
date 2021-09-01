@@ -11,6 +11,15 @@ WITH accounts AS (
 
 ),
 
+projects AS (
+
+    SELECT 
+        *
+    FROM 
+        {{ ref('dim_project') }}
+
+),
+
 inter_token_current_owner AS (
 
     SELECT 
@@ -24,17 +33,22 @@ inter_token_current_owner AS (
     Transformations
 */
 
-accounts_current_owner__joined AS (
+current_owner_dims__joined AS (
 
     SELECT 
         accounts.dim_account_id, 
+        projects.dim_project_id,
         inter_token_current_owner.*
     FROM 
-        accounts
-    INNER JOIN 
         inter_token_current_owner
+    INNER JOIN 
+        accounts
     ON 
        accounts.account_id = inter_token_current_owner.buyer_account_id
+    INNER JOIN 
+        projects
+    USING 
+        (project_id)
 
 ),
 
@@ -47,10 +61,14 @@ formatted AS (
     SELECT 
         -- FK 
         dim_account_id, 
-        project_id, 
-        token_id
+        dim_project_id, 
+        token_id,
+
+        -- Details
+        block_at AS bought_at
+        
     FROM 
-        accounts_current_owner__joined
+        current_owner_dims__joined
 
 )
 

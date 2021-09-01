@@ -1,5 +1,5 @@
-from src.opensea_extract_load import OpenseaExtractLoad
+from src.pipelines.art_blocks_sales_pipeline import ArtBlocksSalesPipeline
 
 
 if __name__ == "__main__":
-    OpenseaExtractLoad.run()
+    ArtBlocksSalesPipeline().run()
