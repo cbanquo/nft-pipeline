@@ -1,4 +1,10 @@
-from src.pipelines import ArtBlocksSalesPipeline, CryptoPunkSalesPipeline, NounsDaoAuctionPipeline, BAYCTransfersPipeline
+from src.pipelines import (
+    ArtBlocksSalesPipeline, 
+    CryptoPunkSalesPipeline, 
+    NounsDaoAuctionPipeline, 
+    BAYCTransfersPipeline, 
+    AutoglyphsTranfersPipeline
+)
 
 
 if __name__ == "__main__":
@@ -6,3 +12,4 @@ if __name__ == "__main__":
     CryptoPunkSalesPipeline().run()
     NounsDaoAuctionPipeline().run()
     BAYCTransfersPipeline().run()
+    AutoglyphsTranfersPipeline().run()
