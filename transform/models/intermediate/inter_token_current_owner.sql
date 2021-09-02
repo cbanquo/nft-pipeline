@@ -6,12 +6,12 @@
     Tables
 */
 
-WITH transactions AS (
+WITH sales AS (
 
     SELECT 
         * 
     FROM 
-        {{ ref('stg_art_blocks_sales') }}
+        {{ ref('inter_sales_unioned') }}
 
 ), 
 
@@ -19,24 +19,24 @@ WITH transactions AS (
     Transformations
 */
 
-transactions__row_number AS (
+sales__row_number AS (
 
     SELECT 
         *,
         ROW_NUMBER() OVER(PARTITION BY project_name, token_id ORDER BY block_number DESC) AS rn
     FROM 
-        transactions
+        sales
 ), 
 
-transactions__last AS (
+sales__last AS (
 
     SELECT
         * 
     FROM 
-        transactions__row_number
+        sales__row_number
     WHERE 
         rn = 1
 
 )
 
-SELECT * FROM transactions__last
+SELECT * FROM sales__last

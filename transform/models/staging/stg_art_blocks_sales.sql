@@ -23,7 +23,7 @@ flattened AS (
         data:buyer::TEXT AS buyer_account_id,
         data:seller::TEXT AS seller_account_id, 
         
-        value:token:tokenId::INT AS token_id,
+        'ART-BLOCKS-' || value:token:tokenId::TEXT AS token_id,
 
         data:paymentToken::TEXT AS payment_token_id,
 

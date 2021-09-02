@@ -7,13 +7,13 @@
     Tables
 */
 
-WITH transactions AS (
+WITH sales AS (
 
     SELECT 
         buyer_account_id, 
         seller_account_id
     FROM 
-        {{ ref('stg_art_blocks_sales') }}
+        {{ ref('inter_sales_unioned') }}
 
 ),
 
@@ -26,14 +26,14 @@ accounts__unioned AS (
     SELECT 
         buyer_account_id AS account_id
     FROM 
-        transactions
+        sales
 
     UNION ALL 
 
     SELECT 
-        buyer_account_id
+        seller_account_id
     FROM 
-        transactions
+        sales
 
 ), 
 

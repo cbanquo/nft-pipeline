@@ -2,13 +2,13 @@
     Tables
 */
 
-WITH transactions AS (
+WITH sales AS (
 
     SELECT 
         project_name, 
         artist_name
     FROM 
-        {{ ref('stg_art_blocks_sales') }}
+        {{ ref('inter_sales_unioned') }}
 
 ),
 
@@ -22,7 +22,7 @@ projects__grouped AS (
         project_name, 
         artist_name
     FROM 
-        transactions
+        sales
     GROUP BY 
         1, 2
 

@@ -18,7 +18,7 @@ formatted AS (
         data:to:id::TEXT AS buyer_account_id, 
         data:from:id::TEXT AS seller_account_id, 
 
-        SPLIT_PART(data:id ,'-', 1) AS token_id,
+        'CRYPTO-PUNK-' || SPLIT_PART(data:id ,'-', 1)::TEXT AS token_id,
 
         '0x0000000000000000000000000000000000000000'::TEXT AS payment_token_id,
 
