@@ -13,6 +13,15 @@ class AbstractSubgraphSalesPipeline(ABC):
 
 
     def __init__(self, url: str, table_name: str, query_name: str, json_query: str, timestamp_col: str) -> None:
+        """Child classes must populate these params
+
+        Args:
+            url (str): Subgraph url
+            table_name (str): Database table to store data in 
+            query_name (str): Subgraph query name (first line of graphQL query)
+            json_query (str): JSON formatted as string with 2 formatted spaces left for `first` and blockTimestamp
+            timestamp_col (str): Name of timestamp column in subgraph
+        """
         self.url = url
         self.table_name = table_name
         self.query_name = query_name
@@ -23,6 +32,8 @@ class AbstractSubgraphSalesPipeline(ABC):
 
 
     def run(self) -> None:
+        """Run extract and load pipeline
+        """
         n = 0
         while True:
             last_block_timestamp = self._get_last_block_timestamp()
@@ -42,6 +53,20 @@ class AbstractSubgraphSalesPipeline(ABC):
 
 
     def _get_data(self, timestamp_offset: int, n_return: int = 1000) -> List[Dict]:
+        """Get data from subgraph API
+
+        Args:
+            timestamp_offset (int): Get all data where timestamp greater than this value
+            n_return (int, optional): Response to return (max=1000). Defaults to 1000.
+
+        Raises:
+            Exception: If query fails to obtain status_code==200
+
+        Returns:
+            List[Dict]: List of json data
+        """
+        assert n_return <= 1000
+
         query_str = self.json_query.format(n_return, timestamp_offset)
         logging.debug(f"JSON query: {query_str}")
 
@@ -50,20 +75,34 @@ class AbstractSubgraphSalesPipeline(ABC):
         if response.status_code != 200:
             raise Exception("API request failed")
 
-        print(f"Response: {response.text}")
+        logging.debug(f"Response: {response.text}")
 
         return response.json()['data'][self.query_name]
 
 
     @staticmethod
     def _format_data(data: List[List[Dict]]) -> List[str]:
+        """Ensure data is flattened to single list and JSON formatted
+
+        Args:
+            data (List[List[Dict]]): Data to format
+
+        Returns:
+            List[str]: Formatted data
+        """
         # flatten if list of lists
         if data and isinstance(data[0], list):
             data = list(chain.from_iterable(data))
+            
         return [json.dumps(obj) for obj in data]
 
 
     def _insert_data(self, data: List[str]) -> None: 
+        """Insert data into db
+
+        Args:
+            data (List[str]): Formatted data
+        """
         if data:
             cs = self.ctx.cursor()
             
@@ -91,7 +130,12 @@ class AbstractSubgraphSalesPipeline(ABC):
                 cs.close()       
 
 
-    def _get_last_block_timestamp(self) -> str:
+    def _get_last_block_timestamp(self) -> int:
+        """Get largest block timestamp from database
+
+        Returns:
+            int: Largest block timestamp
+        """
         block_timestamp = 0
 
         cs = self.ctx.cursor()
