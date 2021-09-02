@@ -1,2 +1,3 @@
 from src.pipelines.art_blocks_sales_pipeline import ArtBlocksSalesPipeline
 from src.pipelines.crypto_punk_sales_pipeline import CryptoPunkSalesPipeline
+from src.pipelines.nouns_dao_auction_pipeline import NounsDaoAuctionPipeline
