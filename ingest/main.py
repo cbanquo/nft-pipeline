@@ -1,5 +1,6 @@
-from src.pipelines.art_blocks_sales_pipeline import ArtBlocksSalesPipeline
+from src.pipelines import ArtBlocksSalesPipeline, CryptoPunkSalesPipeline
 
 
 if __name__ == "__main__":
     ArtBlocksSalesPipeline().run()
+    CryptoPunkSalesPipeline().run()
