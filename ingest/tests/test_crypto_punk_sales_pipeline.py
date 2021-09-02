@@ -2,7 +2,7 @@ from typing import List, Dict
 import pytest
 import json
 
-from src.pipelines.art_blocks_sales_pipeline import ArtBlocksSalesPipeline, TABLE_NAME, TIMESTAMP_COL
+from src.pipelines.crypto_punk_sales_pipeline import CryptoPunkSalesPipeline, TABLE_NAME, TIMESTAMP_COL
 from src.config import config
 
 
@@ -22,8 +22,8 @@ class TestArtBlocksSalesPipeline:
 
 
     @pytest.fixture(scope="class")
-    def instance(self) -> ArtBlocksSalesPipeline:
-        return ArtBlocksSalesPipeline()
+    def instance(self) -> CryptoPunkSalesPipeline:
+        return CryptoPunkSalesPipeline()
 
 
     @pytest.fixture(scope='class')
