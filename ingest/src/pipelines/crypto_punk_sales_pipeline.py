@@ -2,26 +2,25 @@ from src.pipelines.abstract_subgraph_sales_pipeline import AbstractSubgraphSales
 
 
 TABLE_NAME="crypto_punk_sales"
-URL="https://api.thegraph.com/subgraphs/name/itsjerryokolo/cryptopunks"
-QUERY_NAME="sales"
+URL="https://api.thegraph.com/subgraphs/name/upshot-tech/nft-analytics-cryptopunks"
+QUERY_NAME="saleEvents"
 JSON_QUERY="""
     {{
-        sales(first: {}, orderBy: timestamp, orderDirection: asc, where:{{ timestamp_gt: {} }}) {{
+        saleEvents(first: {}, orderBy: timestamp, orderDirection: asc, where:{{ timestamp_gt: {} }}) {{
             id
-            to {{
+            seller {{
                 id
             }}
-            from {{
+            buyer {{
                 id
             }}
             amount
-            blockNumber
+            block
             timestamp
-            contract {{
-                name
+            nft {{
+                tokenId
             }}
         }}
-
     }}
 """
 TIMESTAMP_COL="timestamp"
