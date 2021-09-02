@@ -11,7 +11,7 @@ TABLE_NAME="art_blocks_sales"
 URL = "https://api.thegraph.com/subgraphs/name/artblocks/art-blocks"
 JSON_QUERY = """
     {{
-        openSeaSales(first: {}, orderBy: blockTimestamp, orderDirection: asc, where:{{blockTimestamp_gt: {}}}) {{
+        openSeaSales(first: {}, orderBy: blockTimestamp, orderDirection: asc, where:{{ blockTimestamp_gt: {} }}) {{
             id
             saleType
             blockNumber
