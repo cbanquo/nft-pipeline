@@ -5,7 +5,6 @@
 WITH transactions AS (
 
     SELECT 
-        project_id, 
         project_name, 
         artist_name
     FROM 
@@ -20,13 +19,12 @@ WITH transactions AS (
 projects__grouped AS (
 
     SELECT 
-        project_id, 
         project_name, 
         artist_name
     FROM 
         transactions
     GROUP BY 
-        1, 2, 3
+        1, 2
 
 )
 

@@ -23,7 +23,7 @@ transactions__row_number AS (
 
     SELECT 
         *,
-        ROW_NUMBER() OVER(PARTITION BY project_id, token_id ORDER BY block_number DESC) AS rn
+        ROW_NUMBER() OVER(PARTITION BY project_name, token_id ORDER BY block_number DESC) AS rn
     FROM 
         transactions
 ), 

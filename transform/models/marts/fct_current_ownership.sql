@@ -48,7 +48,7 @@ current_owner_dims__joined AS (
     INNER JOIN 
         projects
     USING 
-        (project_id)
+        (project_name, artist_name)
 
 ),
 
