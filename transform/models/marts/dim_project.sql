@@ -22,7 +22,6 @@ formatted AS (
         ROW_NUMBER() OVER(ORDER BY project_name) AS dim_project_id,
 
         -- Details
-        project_id, 
         project_name, 
         artist_name
 

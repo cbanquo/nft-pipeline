@@ -7,3 +7,4 @@ sources:
     schema: python
     tables: 
       - name: art_blocks_sales
+      - name: crypto_punk_sales

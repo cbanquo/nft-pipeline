@@ -19,15 +19,11 @@ WITH opensea_transactions AS (
 flattened AS (
 
     SELECT 
-        -- PK 
-        data:id::TEXT AS transaction_id, 
-
         --FK 
         data:buyer::TEXT AS buyer_account_id,
         data:seller::TEXT AS seller_account_id, 
         
-        value:token:project:projectId::INT AS project_id,
-        value:token:tokenId::INT AS token_id,
+        'ART-BLOCKS-' || value:token:tokenId::TEXT AS token_id,
 
         data:paymentToken::TEXT AS payment_token_id,
 
