@@ -8,6 +8,9 @@ from src.config import config
 def cursor():
     """Creates a test schema and returns a cursor to interact with db
     """
+    # ensures we don't overwrite prod if we run outside of the ingest folder
+    assert config['schema'].startswith("test")
+    
     ctx = get_snowflake_connection()
     cs = ctx.cursor()
     try:
