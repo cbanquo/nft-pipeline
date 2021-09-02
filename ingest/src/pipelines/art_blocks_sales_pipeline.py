@@ -1,4 +1,4 @@
-from src.pipelines.abstract_subgraph_sales_pipeline import AbstractSubgraphSalesPipeline
+from src.pipelines.abstract_subgraph_pipeline import AbstractSubgraphPipeline
 
 
 TABLE_NAME="art_blocks_sales"
@@ -31,7 +31,7 @@ JSON_QUERY = """
 TIMESTAMP_COL="blockTimestamp"
 
 
-class ArtBlocksSalesPipeline(AbstractSubgraphSalesPipeline):
+class ArtBlocksSalesPipeline(AbstractSubgraphPipeline):
 
     def __init__(self) -> None:
         super().__init__(URL, TABLE_NAME, QUERY_NAME, JSON_QUERY, TIMESTAMP_COL)

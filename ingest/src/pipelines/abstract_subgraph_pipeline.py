@@ -9,7 +9,7 @@ from src.db_connection import get_snowflake_connection
 from src.config import config
 
 
-class AbstractSubgraphSalesPipeline(ABC):
+class AbstractSubgraphPipeline(ABC):
 
 
     def __init__(self, url: str, table_name: str, query_name: str, json_query: str, timestamp_col: str) -> None:
