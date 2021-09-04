@@ -30,7 +30,7 @@ formatted AS (
         TO_TIMESTAMP(data:timestamp) AS block_at, 
         
         -- Details
-        'Transfer' AS transfer_type
+        'Transfer' AS transfer_type,
         'Bored Ape Yacht Club'::TEXT AS project_name,
         NULL AS artist_name,
         
