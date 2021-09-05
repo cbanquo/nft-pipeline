@@ -25,7 +25,7 @@ crypto_punks AS (
     Transformations
 */
 
-sales__unioned AS (
+transactions__unioned AS (
 
     SELECT 
         buyer_account_id, 
@@ -57,6 +57,28 @@ sales__unioned AS (
     FROM 
         crypto_punks
 
+),
+
+-- convert price to ETH
+price_normalised AS (
+
+    SELECT 
+        buyer_account_id, 
+        seller_account_id, 
+        token_id, 
+        block_at,
+        block_number,
+        project_name,
+        artist_name, 
+        transaction_type,
+        ((price / rate) / 100000000000000000)::FLOAT AS price
+    FROM 
+        transactions__unioned
+    INNER JOIN 
+        {{ ref('currency_conversion') }}
+    USING
+        (payment_token_id)
+
 )
 
-SELECT * FROM sales__unioned
+SELECT * FROM price_normalised
