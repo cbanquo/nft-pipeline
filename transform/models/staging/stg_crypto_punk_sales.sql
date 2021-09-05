@@ -25,7 +25,7 @@ formatted AS (
         data:block::INT AS block_number,
 
         -- Details
-        'Sale' AS transfer_type,
+        'Sale' AS transaction_type,
         'Crypto Punks' AS project_name, 
         'Larva Labs' AS artist_name,
         'Single' AS sale_type,

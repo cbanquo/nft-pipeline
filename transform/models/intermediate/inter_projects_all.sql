@@ -8,7 +8,7 @@ WITH sales AS (
         project_name, 
         artist_name
     FROM 
-        {{ ref('inter_sales_unioned') }}
+        {{ ref('inter_transactions_unioned') }}
 
 ),
 

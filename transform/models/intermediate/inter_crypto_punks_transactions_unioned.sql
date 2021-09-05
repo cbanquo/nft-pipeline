@@ -34,7 +34,7 @@ unioned AS (
         payment_token_id,
         block_at,
         block_number,
-        transfer_type,
+        transaction_type,
         project_name,
         artist_name,
         price
@@ -50,7 +50,7 @@ unioned AS (
         payment_token_id,
         block_at,
         block_number,
-        transfer_type,
+        transaction_type,
         project_name,
         artist_name,
         price

@@ -31,7 +31,7 @@ flattened AS (
 
         
         -- Details
-        'Sale' AS transfer_type,
+        'Sale' AS transaction_type,
         value:token:project:name::TEXT AS project_name,
         value:token:project:artistName::TEXT AS artist_name,
         data:saleType::TEXT AS sale_type,
