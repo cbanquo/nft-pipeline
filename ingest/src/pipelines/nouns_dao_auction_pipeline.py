@@ -6,7 +6,7 @@ URL="https://api.thegraph.com/subgraphs/name/nounsdao/nouns-subgraph"
 QUERY_NAME="auctions"
 JSON_QUERY="""
     {{
-        auctions(first: {}, orderBy: startTime, orderDirection: asc, where:{{ startTime_gt: {} }}) {{
+        auctions(first: {}, orderBy: startTime, orderDirection: asc, where:{{ startTime_gt: {}, settled: true }}) {{
             noun {{
                 id
             }}
