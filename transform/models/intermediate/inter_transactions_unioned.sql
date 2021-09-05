@@ -17,7 +17,7 @@ crypto_punks AS (
     SELECT 
         *
     FROM 
-        {{ ref('stg_crypto_punk_sales') }}
+        {{ ref('inter_crypto_punks_transactions_unioned') }}
 
 ),
 
@@ -36,7 +36,7 @@ sales__unioned AS (
         block_number,
         project_name,
         artist_name, 
-        sale_type,
+        transaction_type,
         price
     FROM 
         art_blocks
@@ -52,7 +52,7 @@ sales__unioned AS (
         block_number,
         project_name,
         artist_name, 
-        sale_type,
+        transaction_type,
         price
     FROM 
         crypto_punks

@@ -3,7 +3,7 @@ WITH crypto_punk_sales AS (
     SELECT 
         *
     FROM 
-        {{ source('raw_python', 'crypto_punk_sales')}}
+        {{ source('raw_python', 'crypto_punk_transfers')}}
 
 ),
 
@@ -15,8 +15,8 @@ formatted AS (
 
     SELECT 
         -- FK 
-        data:buyer:id::TEXT AS buyer_account_id, 
-        data:seller:id::TEXT AS seller_account_id, 
+        data:to:id::TEXT AS buyer_account_id, 
+        data:from:id::TEXT AS seller_account_id, 
         'CRYPTO-PUNK-' || data:nft:tokenId::TEXT AS token_id,
         '0x0000000000000000000000000000000000000000'::TEXT AS payment_token_id,
 
@@ -25,13 +25,12 @@ formatted AS (
         data:block::INT AS block_number,
 
         -- Details
-        'Sale' AS transaction_type,
+        'Transfer' AS transaction_type,
         'Crypto Punks' AS project_name, 
         'Larva Labs' AS artist_name,
-        'Single' AS sale_type,
 
         -- Numbers
-        data:amount::INT AS price
+        0 AS price
         
     FROM 
         crypto_punk_sales

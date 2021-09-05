@@ -1,5 +1,6 @@
 from src.pipelines.art_blocks_sales_pipeline import ArtBlocksSalesPipeline
 from src.pipelines.crypto_punk_sales_pipeline import CryptoPunkSalesPipeline
+from src.pipelines.crypto_punk_transfers_pipeline import CryptoPunkTransfersPipeline
 from src.pipelines.nouns_dao_auction_pipeline import NounsDaoAuctionPipeline
 from src.pipelines.bayc_transfers_pipeline import BAYCTransfersPipeline
 from src.pipelines.autoglyphs_transfers_pipeline import AutoglyphsTranfersPipeline
