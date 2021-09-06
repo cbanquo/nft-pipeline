@@ -11,14 +11,14 @@ WITH transactions AS (
 
 ),
 
--- accounts AS (
+accounts AS (
 
---     SELECT
---         * 
---     FROM 
---         {{ ref('dim_account') }}
+    SELECT
+        * 
+    FROM 
+        {{ ref('dim_account') }}
 
--- ),
+),
 
 /*
     Transformations
@@ -65,19 +65,19 @@ account_profit AS (
 
 ),
 
--- account_profit_dim__joined AS (
+account_profit_dim__joined AS (
 
---     SELECT 
---         accounts.dim_account_id,
---         account_profit.*
---     FROM 
---         account_profit
---     INNER JOIN 
---         accounts
---     USING 
---         (account_id)
+    SELECT 
+        accounts.dim_account_id,
+        account_profit.*
+    FROM 
+        account_profit
+    INNER JOIN 
+        accounts
+    USING 
+        (account_id)
 
--- ),
+),
 
 /*
     Cleaning
@@ -87,7 +87,7 @@ formmated AS (
 
     SELECT 
         --FK 
-        account_id,
+        dim_account_id,
 
         --Details
         eth_profit, 
