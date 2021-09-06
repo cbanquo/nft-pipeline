@@ -27,7 +27,7 @@ WITH transactions AS (
 buys_sells__unioned AS (
 
     SELECT  
-        buyer_account_id AS account_id, 
+        to_account_id AS account_id, 
         'buy' AS type, 
         eth_price
     FROM 
@@ -36,7 +36,7 @@ buys_sells__unioned AS (
     UNION ALL 
 
     SELECT  
-        seller_account_id, 
+        from_account_id, 
         'sell' AS type, 
         eth_price
     FROM 

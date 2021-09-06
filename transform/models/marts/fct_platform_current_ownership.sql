@@ -61,7 +61,7 @@ formatted AS (
 
     SELECT 
         -- FK 
-        buyer_account_id AS account_id, 
+        to_account_id AS account_id, 
         contract_id, 
         token_id,
 
