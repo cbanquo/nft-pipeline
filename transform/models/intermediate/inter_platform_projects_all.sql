@@ -5,7 +5,7 @@
 WITH projects AS (
 
     SELECT 
-        contract_id, 
+        contract_id
     FROM 
         {{ ref('inter_platform_transactions__unioned') }}
 

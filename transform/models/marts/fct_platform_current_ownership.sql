@@ -44,7 +44,7 @@ current_owner_dims__joined AS (
     INNER JOIN 
         accounts
     ON 
-       accounts.account_id = inter_token_current_owner.buyer_account_id
+       accounts.account_id = inter_token_current_owner.to_account_id
     INNER JOIN 
         projects
     USING 
@@ -69,7 +69,7 @@ formatted AS (
         eth_price
         
     FROM 
-        inter_token_current_owner
+        current_owner_dims__joined
 
 )
 

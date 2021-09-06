@@ -18,6 +18,7 @@ top_projects AS (
         *
     FROM 
         {{ ref('top_projects') }}
+
 ),
 
 /*
@@ -37,7 +38,7 @@ projects_top__joined AS (
     USING 
         (contract_id)
 
-)
+),
 
 /*
     Cleaning
@@ -56,7 +57,7 @@ formatted AS (
         is_top_project
 
     FROM 
-        projects
+        projects_top__joined
 
 )
 

@@ -95,7 +95,7 @@ formmated AS (
         n_sells
     
     FROM 
-        account_profit
+        account_profit_dim__joined
     ORDER BY 
         2 DESC
 
