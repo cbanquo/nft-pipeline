@@ -4,3 +4,4 @@ from src.pipelines.crypto_punk_transfers_pipeline import CryptoPunkTransfersPipe
 from src.pipelines.nouns_dao_auction_pipeline import NounsDaoAuctionPipeline
 from src.pipelines.bayc_transfers_pipeline import BAYCTransfersPipeline
 from src.pipelines.autoglyphs_transfers_pipeline import AutoglyphsTranfersPipeline
+from src.pipelines.open_sea_sales import OpenSeaSalesPipeline
