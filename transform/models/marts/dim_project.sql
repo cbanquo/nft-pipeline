@@ -11,6 +11,7 @@ WITH projects AS (
 
 ),
 
+-- projects we have identified as elite
 top_projects AS (
 
     SELECT
