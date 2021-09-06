@@ -2,24 +2,23 @@
     Tables
 */
 
-WITH 
--- accounts AS (
+WITH accounts AS (
 
---     SELECT 
---         *
---     FROM 
---         {{ ref('dim_account') }}
+    SELECT 
+        *
+    FROM 
+        {{ ref('dim_account') }}
 
--- ),
+),
 
--- projects AS (
+projects AS (
 
---     SELECT 
---         *
---     FROM 
---         {{ ref('dim_project') }}
+    SELECT 
+        *
+    FROM 
+        {{ ref('dim_project') }}
 
--- ),
+),
 
 inter_token_current_owner AS (
 
@@ -34,24 +33,24 @@ inter_token_current_owner AS (
     Transformations
 */
 
--- current_owner_dims__joined AS (
+current_owner_dims__joined AS (
 
---     SELECT 
---         accounts.dim_account_id, 
---         projects.dim_project_id,
---         inter_token_current_owner.*
---     FROM 
---         inter_token_current_owner
---     INNER JOIN 
---         accounts
---     ON 
---        accounts.account_id = inter_token_current_owner.buyer_account_id
---     INNER JOIN 
---         projects
---     USING 
---         (project_name, artist_name)
+    SELECT 
+        accounts.dim_account_id, 
+        projects.dim_project_id,
+        inter_token_current_owner.*
+    FROM 
+        inter_token_current_owner
+    INNER JOIN 
+        accounts
+    ON 
+       accounts.account_id = inter_token_current_owner.buyer_account_id
+    INNER JOIN 
+        projects
+    USING 
+        (contract_id)
 
--- ),
+),
 
 /*
     Cleaning 
@@ -61,11 +60,11 @@ formatted AS (
 
     SELECT 
         -- FK 
-        to_account_id AS account_id, 
-        contract_id, 
-        token_id,
+        dim_account_id, 
+        dim_project_id, 
 
         -- Details
+        token_id,
         block_at AS bought_at,
         eth_price
         
