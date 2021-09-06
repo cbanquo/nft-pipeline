@@ -10,3 +10,5 @@ sources:
       - name: bayc_transfers
       - name: crypto_punk_sales
       - name: crypto_punk_transfers
+      
+      - name: open_sea_sales

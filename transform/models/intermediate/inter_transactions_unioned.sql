@@ -71,7 +71,7 @@ price_normalised AS (
         project_name,
         artist_name, 
         transaction_type,
-        ((price / rate) / 100000000000000000)::FLOAT AS price
+        ((price / rate) / 1000000000000000000)::FLOAT AS price
     FROM 
         transactions__unioned
     INNER JOIN 
