@@ -8,7 +8,7 @@ WITH art_blocks AS (
     SELECT 
         *
     FROM 
-        {{ ref('stg_art_blocks_sales') }}
+        {{ ref('stg_project_art_blocks_sales') }}
 
 ),
 
@@ -17,7 +17,7 @@ crypto_punks AS (
     SELECT 
         *
     FROM 
-        {{ ref('inter_crypto_punks_transactions_unioned') }}
+        {{ ref('inter_project_crypto_punks_transactions__unioned') }}
 
 ),
 
@@ -35,7 +35,6 @@ transactions__unioned AS (
         block_at,
         block_number,
         project_name,
-        artist_name, 
         transaction_type,
         price
     FROM 
@@ -51,7 +50,6 @@ transactions__unioned AS (
         block_at,
         block_number,
         project_name,
-        artist_name, 
         transaction_type,
         price
     FROM 
@@ -69,9 +67,8 @@ price_normalised AS (
         block_at,
         block_number,
         project_name,
-        artist_name, 
         transaction_type,
-        ((price / rate) / 1000000000000000000)::FLOAT AS price
+        ((price / rate) / 1000000000000000000)::FLOAT AS eth_price
     FROM 
         transactions__unioned
     INNER JOIN 

@@ -5,10 +5,9 @@
 WITH sales AS (
 
     SELECT 
-        project_name, 
-        artist_name
+        project_name
     FROM 
-        {{ ref('inter_transactions_unioned') }}
+        {{ ref('inter_project_transactions__unioned') }}
 
 ),
 
@@ -19,12 +18,11 @@ WITH sales AS (
 projects__grouped AS (
 
     SELECT 
-        project_name, 
-        artist_name
+        project_name
     FROM 
         sales
     GROUP BY 
-        1, 2
+        1
 
 )
 

@@ -13,7 +13,7 @@ WITH transactions AS (
         buyer_account_id, 
         seller_account_id
     FROM 
-        {{ ref('inter_transactions_unioned') }}
+        {{ ref('inter_project_transactions__unioned') }}
 
 ),
 

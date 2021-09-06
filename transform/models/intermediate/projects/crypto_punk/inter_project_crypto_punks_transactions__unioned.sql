@@ -8,7 +8,7 @@ WITH sales AS (
     SELECT 
         * 
     FROM 
-        {{ ref('stg_crypto_punk_sales') }}
+        {{ ref('stg_project_crypto_punk_sales') }}
 
 ), 
 
@@ -17,7 +17,7 @@ transfers AS (
     SELECT 
         *
     FROM 
-        {{ ref('stg_crypto_punk_transfers') }}
+        {{ ref('stg_project_crypto_punk_transfers') }}
 
 ),
 
@@ -36,7 +36,6 @@ unioned AS (
         block_number,
         transaction_type,
         project_name,
-        artist_name,
         price
     FROM 
         sales
@@ -52,7 +51,6 @@ unioned AS (
         block_number,
         transaction_type,
         project_name,
-        artist_name,
         price
     FROM 
         transfers

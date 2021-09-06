@@ -11,7 +11,7 @@ WITH transactions AS (
     SELECT 
         * 
     FROM 
-        {{ ref('inter_transactions_unioned') }}
+        {{ ref('inter_project_transactions__unioned') }}
 
 ), 
 
