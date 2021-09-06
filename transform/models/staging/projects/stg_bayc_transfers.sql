@@ -32,7 +32,6 @@ formatted AS (
         -- Details
         'Transfer' AS transaction_type,
         'Bored Ape Yacht Club'::TEXT AS project_name,
-        NULL AS artist_name,
         
         -- Numbers
         0 AS price
