@@ -22,7 +22,7 @@ flattened AS (
         --FK 
         data:buyer::TEXT AS buyer_account_id,
         data:seller::TEXT AS seller_account_id, 
-        value:nft:tokenId::TEXT AS token_id,
+        value:nft:tokenId::INT AS token_id,
         value:nft:contract:id::TEXT AS contract_id,
         data:paymentToken::TEXT AS payment_token_id,
 
