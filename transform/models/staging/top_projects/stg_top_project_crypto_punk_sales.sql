@@ -26,7 +26,7 @@ formatted AS (
 
         -- Details
         'Sale' AS transaction_type,
-        'Crypto Punks' AS project_name, 
+        'Crypto_Punks' AS project_name, 
 
         -- Numbers
         data:amount::INT AS price
