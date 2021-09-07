@@ -20,8 +20,8 @@ flattened AS (
 
     SELECT 
         --FK 
-        data:buyer::TEXT AS buyer_account_id,
-        data:seller::TEXT AS seller_account_id, 
+        data:buyer::TEXT AS to_account_id,
+        data:seller::TEXT AS from_account_id, 
         value:token:tokenId::TEXT AS token_id,
         data:paymentToken::TEXT AS payment_token_id,
 
@@ -43,10 +43,7 @@ flattened AS (
         LATERAL FLATTEN(input => data:tokenOpenSeaSaleLookupTables) 
     WHERE
         LOWER(project_name) IN ('fidenza', 
-                                'ringers', 
-                                'chromie squiggle', 
-                                'archetype', 
-                                'elevated deconstructions') 
+                                'ringers') 
 
 )
 

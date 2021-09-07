@@ -28,8 +28,8 @@ transfers AS (
 unioned AS (
 
     SELECT 
-        buyer_account_id,
-        seller_account_id,
+        to_account_id,
+        from_account_id,
         token_id,
         payment_token_id,
         block_at,
@@ -43,8 +43,8 @@ unioned AS (
     UNION ALL 
 
     SELECT
-        buyer_account_id,
-        seller_account_id,
+        to_account_id,
+        from_account_id,
         token_id,
         payment_token_id,
         block_at,

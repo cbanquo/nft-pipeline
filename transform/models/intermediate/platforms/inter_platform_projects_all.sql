@@ -5,7 +5,8 @@
 WITH projects AS (
 
     SELECT 
-        contract_id
+        contract_id, 
+        block_at
     FROM 
         {{ ref('inter_platform_transactions__unioned') }}
 
@@ -18,7 +19,8 @@ WITH projects AS (
 projects__grouped AS (
 
     SELECT 
-        contract_id
+        contract_id,
+        MIN(block_at) AS first_seen_at
     FROM 
         projects
     GROUP BY 

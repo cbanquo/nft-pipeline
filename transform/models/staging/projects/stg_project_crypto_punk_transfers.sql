@@ -15,8 +15,8 @@ formatted AS (
 
     SELECT 
         -- FK 
-        data:to:id::TEXT AS buyer_account_id, 
-        data:from:id::TEXT AS seller_account_id, 
+        data:to:id::TEXT AS to_account_id, 
+        data:from:id::TEXT AS from_account_id, 
         'CRYPTO-PUNK-' || data:nft:tokenId::TEXT AS token_id,
         '0x0000000000000000000000000000000000000000'::TEXT AS payment_token_id,
 

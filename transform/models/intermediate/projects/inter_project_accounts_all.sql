@@ -10,8 +10,8 @@
 WITH transactions AS (
 
     SELECT 
-        buyer_account_id, 
-        seller_account_id
+        to_account_id, 
+        from_account_id
     FROM 
         {{ ref('inter_project_transactions__unioned') }}
 
@@ -24,14 +24,14 @@ WITH transactions AS (
 accounts__unioned AS (
 
     SELECT 
-        buyer_account_id AS account_id
+        to_account_id AS account_id
     FROM 
         transactions
 
     UNION ALL 
 
     SELECT 
-        seller_account_id
+        from_account_id
     FROM 
         transactions
 

@@ -21,6 +21,9 @@ formatted AS (
         -- PK
         ROW_NUMBER() OVER(ORDER BY contract_id) AS dim_project_id,
 
+        -- Timestamps
+        first_seen_at,
+
         -- Details
         contract_id
 
