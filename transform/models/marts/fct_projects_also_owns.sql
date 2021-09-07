@@ -9,7 +9,7 @@ WITH platform_ownership AS (
     FROM 
         {{ ref('inter_platform_historical_transactions') }}
     WHERE   
-        desc_transaction_number
+        desc_transaction_number = 1
 
 ), 
 
@@ -18,7 +18,9 @@ project_ownership AS (
     SELECT 
         *
     FROM 
-        {{ ref('inter_project_token_current_owner') }}
+        {{ ref('inter_top_projects_historical_transactions') }}
+    WHERE   
+        desc_transaction_number = 1
 
 ),
 
