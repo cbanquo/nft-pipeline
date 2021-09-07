@@ -8,7 +8,7 @@ WITH sales AS (
     SELECT 
         * 
     FROM 
-        {{ ref('stg_project_crypto_punk_sales') }}
+        {{ ref('stg_top_project_crypto_punk_sales') }}
 
 ), 
 
@@ -17,7 +17,7 @@ transfers AS (
     SELECT 
         *
     FROM 
-        {{ ref('stg_project_crypto_punk_transfers') }}
+        {{ ref('stg_top_project_crypto_punk_transfers') }}
 
 ),
 

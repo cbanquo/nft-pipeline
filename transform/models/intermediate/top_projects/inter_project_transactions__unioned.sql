@@ -8,7 +8,7 @@ WITH art_blocks AS (
     SELECT 
         *
     FROM 
-        {{ ref('stg_project_art_blocks_sales') }}
+        {{ ref('stg_top_project_art_blocks_sales') }}
 
 ),
 
@@ -17,7 +17,7 @@ crypto_punks AS (
     SELECT 
         *
     FROM 
-        {{ ref('inter_project_crypto_punks_transactions__unioned') }}
+        {{ ref('inter_top_project_crypto_punks_transactions__unioned') }}
 
 ),
 
