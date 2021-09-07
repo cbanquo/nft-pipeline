@@ -2,12 +2,12 @@
     Tables
 */
 
-WITH projects AS (
+WITH contracts AS (
 
     SELECT 
         *
     FROM 
-        {{ ref('inter_platform_projects_all') }}
+        {{ ref('inter_all_contracts') }}
 
 ),
 
@@ -22,13 +22,13 @@ formatted AS (
         ROW_NUMBER() OVER(ORDER BY contract_id) AS dim_project_id,
 
         -- Timestamps
-        first_seen_at,
+        first_transaction_at,
 
         -- Details
         contract_id
 
     FROM 
-        projects
+        contracts
 
 )
 

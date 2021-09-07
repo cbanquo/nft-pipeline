@@ -1,8 +1,12 @@
 /*
+    Get all contracts that have interacted with any platform
+*/
+
+/*
     Tables
 */
 
-WITH projects AS (
+WITH contracts AS (
 
     SELECT 
         contract_id, 
@@ -16,16 +20,17 @@ WITH projects AS (
     Transformations
 */
 
-projects__grouped AS (
+-- 1 row per contract
+contracts__grouped AS (
 
     SELECT 
         contract_id,
-        MIN(block_at) AS first_seen_at
+        MIN(block_at) AS first_transaction_at
     FROM 
-        projects
+        contracts
     GROUP BY 
         1
 
 )
 
-SELECT * FROM projects__grouped
+SELECT * FROM contracts__grouped
