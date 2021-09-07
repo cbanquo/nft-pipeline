@@ -17,7 +17,7 @@ crypto_punks AS (
     SELECT 
         *
     FROM 
-        {{ ref('inter_top_project_crypto_punks_transactions__unioned') }}
+        {{ ref('inter_top_project_crypto_punks_historical_transactions') }}
 
 ),
 
