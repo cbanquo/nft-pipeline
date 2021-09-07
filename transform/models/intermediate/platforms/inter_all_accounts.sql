@@ -1,3 +1,11 @@
+/*
+    Get all accounts that have interacted with any platform
+*/
+
+/*
+    Tables
+*/
+
 WITH transactions AS (
 
     SELECT 
@@ -12,6 +20,7 @@ WITH transactions AS (
     Transformations
 */
 
+-- long single list
 accounts__unioned AS (
 
     SELECT 
@@ -28,15 +37,14 @@ accounts__unioned AS (
 
 ), 
 
-accounts__grouped AS (
+-- remove duplicates
+accounts__distinct AS (
 
     SELECT 
-        account_id
+        DISTINCT account_id
     FROM 
         accounts__unioned
-    GROUP BY 
-        1
 
 )
 
-SELECT * FROM accounts__grouped
+SELECT * FROM accounts__distinct
