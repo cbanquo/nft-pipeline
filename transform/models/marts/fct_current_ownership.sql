@@ -36,15 +36,20 @@ inter_token_current_owner AS (
 current_owner_dims__joined AS (
 
     SELECT 
-        accounts.dim_account_id, 
+        _to.dim_account_id AS to_dim_account_id, 
+        _from.dim_account_id AS from_dim_account_id, 
         projects.dim_project_id,
         inter_token_current_owner.*
     FROM 
         inter_token_current_owner
     INNER JOIN 
-        accounts
+        accounts AS _to
     ON 
-       accounts.account_id = inter_token_current_owner.to_account_id
+       _to.account_id = inter_token_current_owner.to_account_id
+    INNER JOIN 
+        accounts AS _from
+    ON 
+       _from.account_id = inter_token_current_owner.from_account_id
     INNER JOIN 
         projects
     USING 
@@ -60,7 +65,8 @@ formatted AS (
 
     SELECT 
         -- FK 
-        dim_account_id, 
+        to_dim_account_id,
+        from_dim_account_id,
         dim_project_id, 
 
         -- Details
