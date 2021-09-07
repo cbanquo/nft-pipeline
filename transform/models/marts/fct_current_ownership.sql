@@ -20,12 +20,14 @@ projects AS (
 
 ),
 
-inter_token_current_owner AS (
+current_owners AS (
 
     SELECT 
         *
     FROM 
-        {{ ref('inter_platform_token_current_owner') }}
+        {{ ref('inter_platform_historical_transactions') }}
+    WHERE
+        desc_transaction_number = 1
 
 ), 
 
@@ -39,17 +41,17 @@ current_owner_dims__joined AS (
         _to.dim_account_id AS to_dim_account_id, 
         _from.dim_account_id AS from_dim_account_id, 
         projects.dim_project_id,
-        inter_token_current_owner.*
+        current_owners.*
     FROM 
-        inter_token_current_owner
+        current_owners
     INNER JOIN 
         accounts AS _to
     ON 
-       _to.account_id = inter_token_current_owner.to_account_id
+       _to.account_id = current_owners.to_account_id
     INNER JOIN 
         accounts AS _from
     ON 
-       _from.account_id = inter_token_current_owner.from_account_id
+       _from.account_id = current_owners.from_account_id
     INNER JOIN 
         projects
     USING 

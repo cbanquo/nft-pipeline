@@ -7,7 +7,9 @@ WITH platform_ownership AS (
     SELECT
         * 
     FROM 
-        {{ ref('inter_platform_token_current_owner') }}
+        {{ ref('inter_platform_historical_transactions') }}
+    WHERE   
+        desc_transaction_number
 
 ), 
 
