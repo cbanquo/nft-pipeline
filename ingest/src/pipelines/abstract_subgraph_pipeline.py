@@ -34,10 +34,12 @@ class AbstractSubgraphPipeline(ABC):
     def run(self) -> None:
         """Run extract and load pipeline
         """
+        print(f"RUN: {self.table_name}")
         n = 0
         while True:
+            print(n)
             last_block_timestamp = self._get_last_block_timestamp()
-            
+            print(last_block_timestamp)
             logging.info(f"Last id: {last_block_timestamp}")
 
             data = self._get_data(timestamp_offset=last_block_timestamp, n_return=1000)

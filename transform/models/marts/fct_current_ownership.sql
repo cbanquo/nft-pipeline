@@ -20,12 +20,14 @@ projects AS (
 
 ),
 
-inter_token_current_owner AS (
+current_owners AS (
 
     SELECT 
         *
     FROM 
-        {{ ref('inter_token_current_owner') }}
+        {{ ref('inter_platform_historical_transactions') }}
+    WHERE
+        desc_transaction_number = 1
 
 ), 
 
@@ -36,19 +38,24 @@ inter_token_current_owner AS (
 current_owner_dims__joined AS (
 
     SELECT 
-        accounts.dim_account_id, 
+        _to.dim_account_id AS to_dim_account_id, 
+        _from.dim_account_id AS from_dim_account_id, 
         projects.dim_project_id,
-        inter_token_current_owner.*
+        current_owners.*
     FROM 
-        inter_token_current_owner
+        current_owners
     INNER JOIN 
-        accounts
+        accounts AS _to
     ON 
-       accounts.account_id = inter_token_current_owner.buyer_account_id
+       _to.account_id = current_owners.to_account_id
+    INNER JOIN 
+        accounts AS _from
+    ON 
+       _from.account_id = current_owners.from_account_id
     INNER JOIN 
         projects
     USING 
-        (project_name, artist_name)
+        (contract_id)
 
 ),
 
@@ -60,12 +67,14 @@ formatted AS (
 
     SELECT 
         -- FK 
-        dim_account_id, 
+        to_dim_account_id,
+        from_dim_account_id,
         dim_project_id, 
-        token_id,
 
         -- Details
-        block_at AS bought_at
+        token_id,
+        block_at AS bought_at,
+        eth_price
         
     FROM 
         current_owner_dims__joined

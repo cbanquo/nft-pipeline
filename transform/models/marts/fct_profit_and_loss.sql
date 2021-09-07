@@ -7,7 +7,7 @@ WITH transactions AS (
     SELECT 
         *
     FROM 
-        {{ ref('inter_transactions_unioned') }}
+        {{ ref('inter_platform_historical_transactions') }}
 
 ),
 
@@ -27,18 +27,18 @@ accounts AS (
 buys_sells__unioned AS (
 
     SELECT  
-        buyer_account_id AS account_id, 
+        to_account_id AS account_id, 
         'buy' AS type, 
-        price
+        eth_price
     FROM 
         transactions
 
     UNION ALL 
 
     SELECT  
-        seller_account_id, 
+        from_account_id, 
         'sell' AS type, 
-        price
+        eth_price
     FROM 
         transactions
 
@@ -53,11 +53,11 @@ account_profit AS (
         SUM(
             CASE 
                 WHEN type = 'sell'
-                    THEN +price
+                    THEN +eth_price
                 ELSE 
-                    -price
+                    -eth_price
             END
-         ) AS profit
+         ) AS eth_profit
     FROM 
         buys_sells__unioned
     GROUP BY 
@@ -90,7 +90,7 @@ formmated AS (
         dim_account_id,
 
         --Details
-        profit, 
+        eth_profit, 
         n_buys, 
         n_sells
     

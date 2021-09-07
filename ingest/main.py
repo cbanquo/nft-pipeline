@@ -4,7 +4,8 @@ from src.pipelines import (
     CryptoPunkTransfersPipeline,
     NounsDaoAuctionPipeline, 
     BAYCTransfersPipeline, 
-    AutoglyphsTranfersPipeline
+    AutoglyphsTranfersPipeline, 
+    OpenSeaSalesPipeline
 )
 
 
@@ -15,3 +16,4 @@ if __name__ == "__main__":
     NounsDaoAuctionPipeline().run()
     BAYCTransfersPipeline().run()
     AutoglyphsTranfersPipeline().run()
+    OpenSeaSalesPipeline().run()
