@@ -7,7 +7,7 @@ WITH accounts AS (
     SELECT 
         *
     FROM 
-        {{ ref('inter_all_accounts') }}
+        {{ ref('inter_platform_all_accounts') }}
 
 ),
 

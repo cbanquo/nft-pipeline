@@ -7,7 +7,7 @@ WITH contracts AS (
     SELECT 
         *
     FROM 
-        {{ ref('inter_all_contracts') }}
+        {{ ref('inter_platform_all_contracts') }}
 
 ),
 

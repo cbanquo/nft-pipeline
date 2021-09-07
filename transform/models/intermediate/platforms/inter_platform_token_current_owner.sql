@@ -11,22 +11,13 @@ WITH transactions AS (
     SELECT 
         * 
     FROM 
-        {{ ref('inter_platform_transactions__unioned') }}
+        {{ ref('inter_platform_historical_transactions') }}
 
 ), 
 
 /*
     Transformations
 */
-
-transactions__row_number AS (
-
-    SELECT 
-        *,
-        ROW_NUMBER() OVER(PARTITION BY contract_id, token_id ORDER BY block_number DESC) AS rn
-    FROM 
-        transactions
-), 
 
 transactions__last AS (
 
@@ -35,7 +26,7 @@ transactions__last AS (
     FROM 
         transactions__row_number
     WHERE 
-        rn = 1
+        desc_transaction_number = 1
 
 )
 

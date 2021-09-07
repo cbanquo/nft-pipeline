@@ -12,7 +12,7 @@ WITH contracts AS (
         contract_id, 
         block_at
     FROM 
-        {{ ref('inter_platform_transactions__unioned') }}
+        {{ ref('inter_platform_historical_transactions') }}
 
 ),
 

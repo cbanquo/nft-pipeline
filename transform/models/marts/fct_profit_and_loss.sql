@@ -7,7 +7,7 @@ WITH transactions AS (
     SELECT 
         *
     FROM 
-        {{ ref('inter_platform_transactions__unioned') }}
+        {{ ref('inter_platform_historical_transactions') }}
 
 ),
 

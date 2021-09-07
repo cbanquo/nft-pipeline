@@ -12,7 +12,7 @@ WITH transactions AS (
         to_account_id, 
         from_account_id
     FROM 
-        {{ ref('inter_platform_transactions__unioned') }}
+        {{ ref('inter_platform_historical_transactions') }}
 
 ),
 
