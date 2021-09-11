@@ -1,0 +1,71 @@
+version: 2
+
+models: 
+
+  - name: stg_platform_open_sea_sales
+    tests:
+      - dbt_utils.recency:
+          datepart: day
+          field: block_at
+          interval: 1
+
+    columns: 
+      - name: to_account_id
+        tests: 
+          - not_null
+
+      - name: from_account_id
+        tests: 
+          - not_null
+
+      - name: token_id
+        tests: 
+          - not_null
+
+      - name: contract_id
+        tests: 
+          - not_null
+
+      - name: payment_token_id
+        tests: 
+          - not_null
+
+      - name: block_at
+        tests: 
+          - not_null
+
+      - name: block_number
+        tests: 
+          - not_null
+          - dbt_utils.expression_is_true:
+              expression: ">=0"
+
+      - name: transaction_type
+        tests: 
+          - not_null
+          - dbt_utils.expression_is_true:
+              expression: "= 'Sale'"
+
+      - name: sale_type
+        tests: 
+          - not_null
+          - accepted_values: 
+              values: ["Single", "Bundle"]
+
+      - name: transaction_size
+        tests: 
+          - not_null
+          - dbt_utils.expression_is_true:
+              expression: ">=1"
+          - dbt_utils.expression_is_true:
+              expression: "=1"
+              condition: "sale_type = 'Single'"
+          - dbt_utils.expression_is_true:
+              expression: ">1"
+              condition: "sale_type = 'Bundle'"
+
+      - name: price
+        tests: 
+          - not_null
+          - dbt_utils.expression_is_true:
+              expression: ">=0"
